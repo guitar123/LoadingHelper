@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="zz.itcast.cn.loadinghelper.MainActivity">
+
+    <zz.itcast.cn.loading.pullrefreshview.layout.PullRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <zz.itcast.cn.loading.pullrefreshview.NormalHeaderView
+            android:id="@+id/headView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"/>
+
+    </zz.itcast.cn.loading.pullrefreshview.layout.PullRefreshLayout>
+
+
+</android.support.constraint.ConstraintLayout>
