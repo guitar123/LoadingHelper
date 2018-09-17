@@ -44,8 +44,6 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreListene
 
         mLoadMoreHelper = new LoadMoreHelper(rv_list, mAdapter, this);
 
-        rv_list.setAdapter(mLoadMoreHelper.getAdapter());
-
         headView = (NormalHeaderView) findViewById(R.id.headView);
 
         headView.setOnRefreshListener(new BaseHeaderView.OnRefreshListener() {

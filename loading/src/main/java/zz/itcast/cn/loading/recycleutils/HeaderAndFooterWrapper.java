@@ -30,7 +30,7 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
      * @param adapter 需要包装的adapter
      */
     public HeaderAndFooterWrapper(RecyclerView.Adapter adapter) {
-        mInnerAdapter = adapter;
+        setWrapAdapter(adapter);
     }
 
     /**
@@ -159,5 +159,51 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
         return mFootViews.size();
     }
 
+    /**
+     * 包装adapter
+     *
+     * @param adapter
+     */
+    public void setWrapAdapter(RecyclerView.Adapter adapter) {
+        if (adapter == null)
+            return;
+        if (this.mInnerAdapter != null)
+            this.mInnerAdapter.unregisterAdapterDataObserver(observer);
+        this.mInnerAdapter = adapter;
+        this.mInnerAdapter.registerAdapterDataObserver(observer);
+    }
 
+
+    /**
+     * 适配器数据观察
+     */
+    private RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+
+        HeaderAndFooterWrapper headfootAdapter = HeaderAndFooterWrapper.this;
+
+        @Override
+        public void onChanged() {
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            headfootAdapter.notifyItemRangeChanged(positionStart + getHeadersCount(), itemCount);
+        }
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            headfootAdapter.notifyItemRangeInserted(positionStart + getHeadersCount(), itemCount);
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            headfootAdapter.notifyItemRangeRemoved(positionStart + getHeadersCount(), itemCount);
+        }
+
+        @Override
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+            headfootAdapter.notifyItemMoved(fromPosition + getHeadersCount(), itemCount);
+        }
+    };
 }
