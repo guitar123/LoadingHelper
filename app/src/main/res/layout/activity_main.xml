@@ -14,13 +14,14 @@
         <zz.itcast.cn.loading.pullrefreshview.NormalHeaderView
             android:id="@+id/headView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never"/>
+            android:overScrollMode="never"
+            tools:listitem="@layout/item_layout"/>
 
     </zz.itcast.cn.loading.pullrefreshview.layout.PullRefreshLayout>
 

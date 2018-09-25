@@ -30,7 +30,7 @@ public class DataManager {
 
     public List<String> getInitDataList() {
         dataList.clear();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             dataList.add("数据：" + i);
         }
         return dataList;

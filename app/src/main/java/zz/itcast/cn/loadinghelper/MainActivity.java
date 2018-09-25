@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreListene
     private SimpleAdapter mAdapter;
     private LoadMoreHelper mLoadMoreHelper;
     private NormalHeaderView headView;
-
+    int count = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,38 +46,18 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreListene
 
         headView = (NormalHeaderView) findViewById(R.id.headView);
 
+        //下拉刷新
         headView.setOnRefreshListener(new BaseHeaderView.OnRefreshListener() {
             @Override
             public void onRefresh(BaseHeaderView baseHeaderView) {
                 headView.stopRefresh();
                 mAdapter.setDataList(mDataManager.getInitDataList());
                 mAdapter.notifyDataSetChanged();
+
                 mLoadMoreHelper.setHasMore(true);
             }
         });
     }
-
-    private void refreshUI(boolean isSuccess) {
-
-        if (isSuccess) {
-            Log.d("fhp", "加载完成");
-            List<String> moreDataList = mDataManager.getMoreDataList();
-            mAdapter.addDataList(moreDataList);
-            if (count == 5) {
-                mLoadMoreHelper.stopLoadMore(true);
-                mLoadMoreHelper.setHasMore(false);
-            } else {
-                mLoadMoreHelper.stopLoadMore(true);
-                mLoadMoreHelper.setHasMore(true);
-            }
-        } else {
-            Log.d("fhp", "加载失败");
-            mLoadMoreHelper.stopLoadMore(false);
-        }
-
-    }
-
-    int count = 0;
 
     @Override
     public void onLoadMore() {
@@ -93,17 +73,35 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreListene
                     @Override
                     public void run() {
                         count++;
-
                         if (count == 2) {
                             refreshUI(false);
                         } else {
                             refreshUI(true);
                         }
-
-
                     }
                 });
             }
         }).start();
+    }
+
+    private void refreshUI(boolean isSuccess) {
+
+        if (isSuccess) {
+            Log.d("fhp", "加载完成");
+            List<String> moreDataList = mDataManager.getMoreDataList();
+            mAdapter.addDataList(moreDataList);
+
+            if (count == 5) {
+                mLoadMoreHelper.stopLoadMore(true);
+                mLoadMoreHelper.setHasMore(false);
+            } else {
+                mLoadMoreHelper.stopLoadMore(true);
+                mLoadMoreHelper.setHasMore(true);
+            }
+        } else {
+            Log.d("fhp", "加载失败");
+            mLoadMoreHelper.stopLoadMore(false);
+        }
+
     }
 }
