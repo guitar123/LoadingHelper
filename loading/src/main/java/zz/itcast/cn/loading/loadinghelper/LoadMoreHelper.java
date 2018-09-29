@@ -19,14 +19,13 @@ public class LoadMoreHelper {
 
     private boolean isHasMore = false;
 
-    private LoadingPullableListener footerAdapter;
+    private LoadingPullableListener mLoadingPullableListener;
 
     private boolean isLoading;//是否正在加载
 
     private OnLoadMoreListener listener;
 
-    //头布局和脚布局的包装类
-    private HeaderAndFooterWrapper mWrapper;
+    private HeaderAndFooterWrapper mWrapper;//头布局和脚布局的包装类
 
     /**
      * @param recyclerView RecycleView
@@ -35,7 +34,7 @@ public class LoadMoreHelper {
      */
     public LoadMoreHelper(RecyclerView recyclerView, final RecyclerView.Adapter adapter, final OnLoadMoreListener listener) {
         //设置脚布局点击事件，点击后加载更多
-        this.footerAdapter = new NormalLoadMoreImpl(new View.OnClickListener() {
+        this.mLoadingPullableListener = new NormalLoadMoreImpl(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //点击之后继续加载更多数据
@@ -49,7 +48,7 @@ public class LoadMoreHelper {
         final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         //对adapter进行包装
         mWrapper = new HeaderAndFooterWrapper(adapter);
-        mWrapper.addFootView(footerAdapter.getView(recyclerView));
+        mWrapper.addFootView(mLoadingPullableListener.getView(recyclerView));
         recyclerView.setAdapter(mWrapper);//设置适配器
 
         //添加滚动的监听
@@ -77,7 +76,7 @@ public class LoadMoreHelper {
      */
     public void setHasMore(boolean isHasMore) {
         this.isHasMore = isHasMore;
-        footerAdapter.setHasMoreData(isHasMore);
+        mLoadingPullableListener.setHasMoreData(isHasMore);
     }
 
     /**
@@ -87,9 +86,9 @@ public class LoadMoreHelper {
      */
     public void stopLoadMore(boolean isSuccess) {
         if (isSuccess)
-            footerAdapter.onSuccess();
+            mLoadingPullableListener.onSuccess();
         else
-            footerAdapter.onFailue();
+            mLoadingPullableListener.onFailue();
         isLoading = false;
     }
 
@@ -99,7 +98,7 @@ public class LoadMoreHelper {
     public void startLoadMore() {
         if (listener != null)
             listener.onLoadMore();
-        footerAdapter.onLoadingData();
+        mLoadingPullableListener.onLoadingData();
         isLoading = true;
     }
 }

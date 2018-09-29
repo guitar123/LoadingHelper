@@ -36,4 +36,5 @@ public interface LoadingPullableListener {
      * @return 返回加载更多的脚布局
      */
     View getView(ViewGroup viewGroup);
+
 }
