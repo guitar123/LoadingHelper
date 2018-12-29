@@ -17,6 +17,8 @@ import java.util.List;
  */
 
 public class SimpleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+
     private final Context mContext;
     private List<String> mList;
     private final LayoutInflater mInflate;
