@@ -1,6 +1,7 @@
 package zz.itcast.cn.loadinghelper.adapter;
 
 import android.content.Context;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +12,9 @@ import android.widget.TextView;
 import java.util.List;
 
 import zz.itcast.cn.loading.recycleutils.WrapperUtils;
+import zz.itcast.cn.loadinghelper.DataManager;
 import zz.itcast.cn.loadinghelper.R;
+import zz.itcast.cn.loadinghelper.activity.BannerAdapter;
 import zz.itcast.cn.loadinghelper.bean.MultipleDataBean;
 import zz.itcast.cn.loadinghelper.bean.NodeInterface;
 
@@ -40,11 +43,15 @@ public class MultipleRecycleItemAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
+
         NodeInterface nodeInterface = mDatas.get(position);
-        if (nodeInterface.isTitle()) return VIEW_TYPE_GROUP_TITLE;
+
+        if (nodeInterface.isParentNode()) return VIEW_TYPE_GROUP_TITLE;
+
         if (nodeInterface.getItemViewType() != 0) {
             return nodeInterface.getItemViewType();
         }
+
         return super.getItemViewType(position);
     }
 
@@ -103,16 +110,13 @@ public class MultipleRecycleItemAdapter extends RecyclerView.Adapter {
                 @Override
                 public int getSpanSize(int position) {
                     int itemViewType = getItemViewType(position);
-                    NodeInterface nodeInterface = mDatas.get(position);
-                    if (nodeInterface.isTitle()) return 4;
-                    if (itemViewType == VIEW_TYPE_BANNER || itemViewType == VIEW_TYPE_INDEX || itemViewType == VIEW_TYPE_ITEM_V || itemViewType == VIEW_TYPE_GROUP_TITLE) {
-                        return 4;
-                    } else if (itemViewType == VIEW_TYPE_ITEM_G_2) {
+                    if (itemViewType == VIEW_TYPE_ITEM_G_2) {
                         return 2;
                     } else if (itemViewType == VIEW_TYPE_ITEM_G_4) {
                         return 1;
+                    } else {
+                        return 4;
                     }
-                    return 1;
                 }
             });
             gridLayoutManager.setSpanCount(gridLayoutManager.getSpanCount());
@@ -121,23 +125,39 @@ public class MultipleRecycleItemAdapter extends RecyclerView.Adapter {
 
     public class BannerViewHolder extends RecyclerView.ViewHolder {
 
+        private final ViewPager viewPager;
+
         public BannerViewHolder(View itemView) {
             super(itemView);
+            viewPager = (ViewPager) itemView.findViewById(R.id.viewPage);
         }
 
         public void bindData(MultipleDataBean multipleDataBean) {
-
+            BannerAdapter adapter = new BannerAdapter(multipleDataBean.banners);
+            viewPager.setAdapter(adapter);
         }
     }
 
     public class IndexViewHolder extends RecyclerView.ViewHolder {
 
+        private final TextView tvIndex1;
+        private final TextView tvIndex2;
+        private final TextView tvIndex3;
+        private final TextView tvIndex4;
+
         public IndexViewHolder(View itemView) {
             super(itemView);
+            tvIndex1 = (TextView) itemView.findViewById(R.id.tv_index1);
+            tvIndex2 = (TextView) itemView.findViewById(R.id.tv_index2);
+            tvIndex3 = (TextView) itemView.findViewById(R.id.tv_index3);
+            tvIndex4 = (TextView) itemView.findViewById(R.id.tv_index4);
         }
 
         public void bindData(MultipleDataBean multipleDataBean) {
-
+            tvIndex1.setText(multipleDataBean.indexs.get(0).title);
+            tvIndex2.setText(multipleDataBean.indexs.get(1).title);
+            tvIndex3.setText(multipleDataBean.indexs.get(2).title);
+            tvIndex4.setText(multipleDataBean.indexs.get(3).title);
         }
     }
 
@@ -154,10 +174,14 @@ public class MultipleRecycleItemAdapter extends RecyclerView.Adapter {
 
     public class VerticalViewHolder extends RecyclerView.ViewHolder {
         private final TextView mTvRefresh;
+        private final TextView tvTitle;
+        private final TextView tvContent;
 
         public VerticalViewHolder(View itemView) {
             super(itemView);
             mTvRefresh = (TextView) itemView.findViewById(R.id.tv_refresh);
+            tvTitle = (TextView) itemView.findViewById(R.id.tv_title);
+            tvContent = (TextView) itemView.findViewById(R.id.tv_content);
         }
 
         public void bindData(final MultipleDataBean.DataBean dataBean) {
@@ -167,12 +191,33 @@ public class MultipleRecycleItemAdapter extends RecyclerView.Adapter {
                 mTvRefresh.setVisibility(View.GONE);
             }
 
+
+            tvTitle.setText(dataBean.title);
+            tvContent.setText(dataBean.content);
+
             mTvRefresh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int index = mDatas.indexOf(dataBean.originalLists.get(0));
-                    mDatas.removeAll(dataBean.originalLists);
+                    MultipleDataBean parentNode = dataBean.parentNode;
+                    List<MultipleDataBean.DataBean> childs = parentNode.lists;
+                    int parentPosition = mDatas.indexOf(parentNode);
+                    mDatas.removeAll(childs);
+
+                    List<MultipleDataBean.DataBean> newDatas = DataManager.getInstance().refreshChildDatas();
+                    parentNode.lists = newDatas;
+
+                    for (int i = 0; i < newDatas.size(); i++) {
+                        MultipleDataBean.DataBean data = newDatas.get(i);
+                        data.parentNode = parentNode;
+                        data.viewType = parentNode.viewType;
+                        if (i == newDatas.size() - 1) {
+                            data.hasRefresh = true;
+                        }
+                    }
+                    mDatas.addAll(parentPosition + 1, newDatas);
+
                     notifyDataSetChanged();
+
                 }
             });
         }

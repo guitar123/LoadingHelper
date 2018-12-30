@@ -14,12 +14,7 @@ public class MultipleDataBean implements NodeInterface<MultipleDataBean> {
 
     public List<IndexBean> indexs;
 
-    private boolean isTitle;
-
-    @Override
-    public MultipleDataBean getData() {
-        return this;
-    }
+    private boolean isParentNode;
 
     @Override
     public int getItemViewType() {
@@ -27,13 +22,13 @@ public class MultipleDataBean implements NodeInterface<MultipleDataBean> {
     }
 
     @Override
-    public void setIsTitle(boolean isTitle) {
-            this.isTitle = isTitle;
+    public void setIsParentNode(boolean isParentNode) {
+            this.isParentNode = isParentNode;
     }
 
     @Override
-    public boolean isTitle() {
-        return isTitle;
+    public boolean isParentNode() {
+        return isParentNode;
     }
 
 
@@ -43,12 +38,8 @@ public class MultipleDataBean implements NodeInterface<MultipleDataBean> {
         public int id;
         public boolean hasRefresh;
         public int viewType;
-        public List<DataBean> originalLists;
 
-        @Override
-        public DataBean getData() {
-            return this;
-        }
+        public MultipleDataBean parentNode;
 
         @Override
         public int getItemViewType() {
@@ -56,12 +47,12 @@ public class MultipleDataBean implements NodeInterface<MultipleDataBean> {
         }
 
         @Override
-        public void setIsTitle(boolean isTitle) {
+        public void setIsParentNode(boolean isParentNode) {
 
         }
 
         @Override
-        public boolean isTitle() {
+        public boolean isParentNode() {
             return false;
         }
 
@@ -74,22 +65,17 @@ public class MultipleDataBean implements NodeInterface<MultipleDataBean> {
         public String content;
 
         @Override
-        public BannerBean getData() {
-            return this;
-        }
-
-        @Override
         public int getItemViewType() {
             return 0;
         }
 
         @Override
-        public void setIsTitle(boolean isTitle) {
+        public void setIsParentNode(boolean isParentNode) {
 
         }
 
         @Override
-        public boolean isTitle() {
+        public boolean isParentNode() {
             return false;
         }
 
@@ -101,22 +87,17 @@ public class MultipleDataBean implements NodeInterface<MultipleDataBean> {
         public String title;
 
         @Override
-        public IndexBean getData() {
-            return this;
-        }
-
-        @Override
         public int getItemViewType() {
             return 0;
         }
 
         @Override
-        public void setIsTitle(boolean isTitle) {
+        public void setIsParentNode(boolean isParentNode) {
 
         }
 
         @Override
-        public boolean isTitle() {
+        public boolean isParentNode() {
             return false;
         }
 

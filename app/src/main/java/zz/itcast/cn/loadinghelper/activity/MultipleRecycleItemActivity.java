@@ -1,15 +1,21 @@
 package zz.itcast.cn.loadinghelper.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+
+import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import zz.itcast.cn.loadinghelper.DataManager;
 import zz.itcast.cn.loadinghelper.R;
 import zz.itcast.cn.loadinghelper.adapter.MultipleRecycleItemAdapter;
 import zz.itcast.cn.loadinghelper.bean.MultipleDataBean;
@@ -19,17 +25,83 @@ public class MultipleRecycleItemActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private GridLayoutManager mGridLayoutManager;
-    private List<MultipleDataBean> mDatas;
     private MultipleRecycleItemAdapter mAdapter;
+    private ProgressDialog progressDialog;
+    private List<NodeInterface> mDatas = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycleview);
 
+        List<MultipleDataBean> datas = DataManager.getInstance().getMultipleDatas();
         initView();
-        initData();
-        formattingData();
+        initListener();
+        formattingData(datas);
+
+
+        mAdapter.setDatas(mDatas);
+    }
+
+    private void initListener() {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    int firstVisiablePosition = mGridLayoutManager.findFirstCompletelyVisibleItemPosition();
+                    int lastVisiablePosition = mGridLayoutManager.findLastCompletelyVisibleItemPosition();
+                    Log.i("fhp", "firstVisiablePosition = " + firstVisiablePosition + " lastVisiablePosition = " + lastVisiablePosition);
+
+                    if (!mRecyclerView.canScrollVertically(1)) {
+                        loadMore();
+                    }
+                }
+            }
+        });
+    }
+
+    private void showLoading() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+        }
+        if (progressDialog.isShowing()) return;
+        progressDialog.setMessage("loading ... ");
+        progressDialog.show();
+    }
+
+    private void hideLoading() {
+        if (progressDialog == null) return;
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    private void loadMore() {
+
+        showLoading();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                List<MultipleDataBean> datas = DataManager.getInstance().loadMore();
+                formattingData(datas);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.setDatas(mDatas);
+                        hideLoading();
+                    }
+                });
+            }
+        }).start();
     }
 
 
@@ -43,79 +115,20 @@ public class MultipleRecycleItemActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private void initData() {
-        mDatas = new ArrayList<>();
-        MultipleDataBean multipleDataBean;
-        for (int i = 0; i < 10; i++) {
-
-            multipleDataBean = new MultipleDataBean();
-            multipleDataBean.action = "MultipleDataBean action: i = " + i;
-            multipleDataBean.title = "MultipleDataBean title: i = " + i;
-            multipleDataBean.id = i;
-
-            if (i == 0) {
-                multipleDataBean.viewType = MultipleRecycleItemAdapter.VIEW_TYPE_BANNER;
-            } else if (i == 1) {
-                multipleDataBean.viewType = MultipleRecycleItemAdapter.VIEW_TYPE_INDEX;
-            } else if (i == 3) {
-                multipleDataBean.viewType = MultipleRecycleItemAdapter.VIEW_TYPE_ITEM_G_2;
-            } else if (i == 4) {
-                multipleDataBean.viewType = MultipleRecycleItemAdapter.VIEW_TYPE_ITEM_G_4;
-            } else if (i % 2 == 0) {
-                multipleDataBean.viewType = MultipleRecycleItemAdapter.VIEW_TYPE_ITEM_V;
-            } else {
-                multipleDataBean.viewType = MultipleRecycleItemAdapter.VIEW_TYPE_ITEM_G_4;
-            }
-
-            List<MultipleDataBean.DataBean> lists = new ArrayList<>();
-            for (int j = 0; j < 5; j++) {
-                MultipleDataBean.DataBean dataBean = new MultipleDataBean.DataBean();
-                dataBean.title = "data title : i = " + i + " j = " + j;
-                dataBean.id = j;
-                dataBean.content = "data content: i = " + i + " j = " + j;
-
-                lists.add(dataBean);
-            }
-            multipleDataBean.lists = lists;
-
-            if (i == 0) {
-                List<MultipleDataBean.BannerBean> bannerBeans = new ArrayList<>();
-                for (int j = 0; j < 4; j++) {
-                    MultipleDataBean.BannerBean bannerBean = new MultipleDataBean.BannerBean();
-                    bannerBean.action = "banner action: i = " + i + " j = " + j;
-                    bannerBean.content = " banner content: i = " + i + " j = " + j;
-                    bannerBean.id = j;
-                    bannerBeans.add(bannerBean);
-                }
-                multipleDataBean.banners = bannerBeans;
-            }
-            if (i == 1) {
-                List<MultipleDataBean.IndexBean> indexBeans = new ArrayList<>();
-                for (int j = 0; j < 4; j++) {
-                    MultipleDataBean.IndexBean indexBean = new MultipleDataBean.IndexBean();
-                    indexBean.id = j;
-                    indexBean.action = "index action: i = " + i + " j = " + j;
-                    indexBean.title = "index action: i = " + i + " j = " + j;
-                    indexBeans.add(indexBean);
-                }
-                multipleDataBean.indexs = indexBeans;
-            }
-
-            mDatas.add(multipleDataBean);
-        }
-    }
-
-    private void formattingData() {
+    /**
+     * 格式化数据
+     */
+    private void formattingData(List<MultipleDataBean> lists) {
 
         List<NodeInterface> datas = new ArrayList<>();
-        for (int i = 0; i < mDatas.size(); i++) {
+        for (int i = 0; i < lists.size(); i++) {
 
-            MultipleDataBean multipleDataBean = mDatas.get(i);
+            MultipleDataBean multipleDataBean = lists.get(i);
 
             if (multipleDataBean.viewType != MultipleRecycleItemAdapter.VIEW_TYPE_BANNER &&
                     multipleDataBean.viewType != MultipleRecycleItemAdapter.VIEW_TYPE_INDEX) {
-                //创建并添加 title
-                multipleDataBean.setIsTitle(true);
+                //创建并添加 父节点 作为title
+                multipleDataBean.setIsParentNode(true);
 
                 datas.add(multipleDataBean);
 
@@ -123,17 +136,24 @@ public class MultipleRecycleItemActivity extends AppCompatActivity {
                     MultipleDataBean.DataBean dataBean = multipleDataBean.lists.get(j);
                     dataBean.viewType = multipleDataBean.viewType;
 
-                    dataBean.originalLists = multipleDataBean.lists;
+
+                    //记录他的 父节点位置
+                    dataBean.parentNode = multipleDataBean;
+
                     datas.add(dataBean);
                 }
+
+
                 if (multipleDataBean.viewType == MultipleRecycleItemAdapter.VIEW_TYPE_ITEM_V) {
                     multipleDataBean.lists.get(multipleDataBean.lists.size() - 1).hasRefresh = true;
                 }
-            } else {
+            } else {// banner 和 index 的位置的数据直接使用
                 datas.add(multipleDataBean);
             }
         }
 
-        mAdapter.setDatas(datas);
+        mDatas.addAll(datas);
     }
+
+
 }
