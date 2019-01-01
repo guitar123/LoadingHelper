@@ -2,16 +2,17 @@ package zz.itcast.cn.loadinghelper.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 
-import org.w3c.dom.Node;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,22 +24,29 @@ import zz.itcast.cn.loadinghelper.bean.NodeInterface;
 
 public class MultipleRecycleItemActivity extends AppCompatActivity {
 
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private RecyclerView mRecyclerView;
     private GridLayoutManager mGridLayoutManager;
     private MultipleRecycleItemAdapter mAdapter;
     private ProgressDialog progressDialog;
     private List<NodeInterface> mDatas = new ArrayList<>();
+    private HandlerThread handlerThread;
+    private Handler handler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycleview);
 
+        handlerThread = new HandlerThread("count_down_time");
+        handlerThread.start();
+        handler = new Handler(handlerThread.getLooper());
+        handler.postDelayed(runnable, 1000);
+
         List<MultipleDataBean> datas = DataManager.getInstance().getMultipleDatas();
         initView();
         initListener();
         formattingData(datas);
-
 
         mAdapter.setDatas(mDatas);
     }
@@ -155,5 +163,41 @@ public class MultipleRecycleItemActivity extends AppCompatActivity {
         mDatas.addAll(datas);
     }
 
+    //在子线程
+    void onTickt() {
+        for (int i = 0; i < mDatas.size(); i++) {
+            if (mDatas.get(i) instanceof MultipleDataBean) {
+                final MultipleDataBean multipleDataBean = (MultipleDataBean) mDatas.get(i);
+                if (multipleDataBean.activityEndTimeMillisecond <= 0) {
+                    continue;
+                }
 
+                multipleDataBean.currentTimeMillisencond += 1000;
+
+                final int position = i;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.notifyItemChanged(position, multipleDataBean);
+//                        mAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
+        handlerThread.quit();
+    }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            onTickt();
+            handler.postDelayed(this, 1000);
+        }
+    };
 }

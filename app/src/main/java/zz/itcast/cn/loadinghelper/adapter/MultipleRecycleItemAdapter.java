@@ -74,6 +74,19 @@ public class MultipleRecycleItemAdapter extends RecyclerView.Adapter {
         return new EmptyViewHolder(new View(parent.getContext()));
     }
 
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads) {
+        if (payloads != null && !payloads.isEmpty() && payloads.get(0) instanceof MultipleDataBean) {
+            MultipleDataBean multipleDataBean = (MultipleDataBean) payloads.get(0);
+            if (mDatas.get(position) instanceof MultipleDataBean && holder instanceof GroupTitleViewHolder && multipleDataBean.isParentNode()) {
+                ((GroupTitleViewHolder) holder).bindCountDownTimer(multipleDataBean);
+            }
+        } else {
+            onBindViewHolder(holder, position);
+        }
+    }
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof BannerViewHolder) {
@@ -163,12 +176,29 @@ public class MultipleRecycleItemAdapter extends RecyclerView.Adapter {
 
     public class GroupTitleViewHolder extends RecyclerView.ViewHolder {
 
+        private final TextView tvTimer;
+
         public GroupTitleViewHolder(View itemView) {
             super(itemView);
+            tvTimer = (TextView) itemView.findViewById(R.id.tv_timer);
         }
 
         public void bindData(MultipleDataBean multipleDataBean) {
+            if (multipleDataBean.activityEndTimeMillisecond <= 0L) {
+                tvTimer.setVisibility(View.GONE);
+            } else {
+                tvTimer.setVisibility(View.VISIBLE);
+                tvTimer.setText(multipleDataBean.getDiffTimeStringWithCurrent());
+            }
+        }
 
+        public void bindCountDownTimer(MultipleDataBean multipleDataBean) {
+            if (multipleDataBean.activityEndTimeMillisecond <= 0L) {
+                tvTimer.setVisibility(View.GONE);
+            } else {
+                tvTimer.setVisibility(View.VISIBLE);
+                tvTimer.setText(multipleDataBean.getDiffTimeStringWithCurrent());
+            }
         }
     }
 
@@ -198,13 +228,15 @@ public class MultipleRecycleItemAdapter extends RecyclerView.Adapter {
             mTvRefresh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //点击刷新
+
                     MultipleDataBean parentNode = dataBean.parentNode;
                     List<MultipleDataBean.DataBean> childs = parentNode.lists;
                     int parentPosition = mDatas.indexOf(parentNode);
-                    mDatas.removeAll(childs);
+                    mDatas.removeAll(childs);//移除老数据
 
                     List<MultipleDataBean.DataBean> newDatas = DataManager.getInstance().refreshChildDatas();
-                    parentNode.lists = newDatas;
+                    parentNode.lists = newDatas;//记录新数据
 
                     for (int i = 0; i < newDatas.size(); i++) {
                         MultipleDataBean.DataBean data = newDatas.get(i);
@@ -214,10 +246,14 @@ public class MultipleRecycleItemAdapter extends RecyclerView.Adapter {
                             data.hasRefresh = true;
                         }
                     }
+                    //添加新数据
                     mDatas.addAll(parentPosition + 1, newDatas);
 
-                    notifyDataSetChanged();
-
+                    if (newDatas.size() == childs.size()) {
+                        notifyItemRangeChanged(parentPosition + 1, newDatas.size());
+                    } else {
+                        notifyDataSetChanged();
+                    }
                 }
             });
         }

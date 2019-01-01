@@ -9,6 +9,31 @@ public class MultipleDataBean implements NodeInterface<MultipleDataBean> {
     public String action;
     public List<DataBean> lists;
     public int viewType;
+    //活动结束时间
+    public long activityEndTimeMillisecond = -1L;
+    //当前时间
+    public long currentTimeMillisencond = -1L;
+
+    private long getDiffTimeMillWithCurrent() {
+        return activityEndTimeMillisecond - currentTimeMillisencond;
+    }
+
+    public String getDiffTimeStringWithCurrent() {
+        if (activityEndTimeMillisecond <= 0) return null;
+
+        if (getDiffTimeMillWithCurrent() <= 0) return "0天0时0分0秒";
+
+        //计算天
+        long days = getDiffTimeMillWithCurrent() / (1000 * 60 * 60 * 24);
+        //计算小时
+        long hours = (getDiffTimeMillWithCurrent() - days * (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
+        //计算分钟
+        long minutes = (getDiffTimeMillWithCurrent() - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60)) / (1000 * 60);
+        //计算秒
+        long second = (getDiffTimeMillWithCurrent() - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60) - minutes * (1000 * 60)) / 1000;
+
+        return days + "天" + hours + "时" + minutes + "分" + second + "秒";
+    }
 
     public List<BannerBean> banners;
 
@@ -23,7 +48,7 @@ public class MultipleDataBean implements NodeInterface<MultipleDataBean> {
 
     @Override
     public void setIsParentNode(boolean isParentNode) {
-            this.isParentNode = isParentNode;
+        this.isParentNode = isParentNode;
     }
 
     @Override

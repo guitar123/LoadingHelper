@@ -1,5 +1,7 @@
 package zz.itcast.cn.loadinghelper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -14,6 +16,7 @@ import zz.itcast.cn.loadinghelper.bean.MultipleDataBean;
  */
 
 public class DataManager {
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static DataManager mInstance = null;
 
     private DataManager() {
@@ -83,6 +86,17 @@ public class DataManager {
 
                 lists.add(dataBean);
             }
+
+            if (multipleDataBean.viewType == MultipleRecycleItemAdapter.VIEW_TYPE_ITEM_V) {
+                if (i == 8) {//添加一个活动
+                    try {
+                        multipleDataBean.activityEndTimeMillisecond = format.parse("2019-01-10 12:00:00").getTime();
+                        multipleDataBean.currentTimeMillisencond = format.parse("2018-12-31 17:31:00").getTime();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
             multipleDataBean.lists = lists;
 
             if (i == 0) {//创建banner数据
@@ -120,6 +134,7 @@ public class DataManager {
         Random random = new Random();
 
         int randm = random.nextInt(10);
+        randm = 5;
         if (randm <= 3) randm = 3;
 
         for (int i = 0; i < randm; i++) {
@@ -134,7 +149,7 @@ public class DataManager {
     public List<MultipleDataBean> loadMore() {
         List<MultipleDataBean> datas = new ArrayList<>();
         MultipleDataBean multipleDataBean;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 10; i++) {
 
             multipleDataBean = new MultipleDataBean();
             multipleDataBean.action = "MultipleDataBean action: i = " + i;
@@ -158,6 +173,17 @@ public class DataManager {
                 lists.add(dataBean);
             }
             multipleDataBean.lists = lists;
+
+            if (multipleDataBean.viewType == MultipleRecycleItemAdapter.VIEW_TYPE_ITEM_V) {
+                if (i == 2) {//添加一个活动
+                    try {
+                        multipleDataBean.activityEndTimeMillisecond = format.parse("2019-01-12 12:00:00").getTime();
+                        multipleDataBean.currentTimeMillisencond = format.parse("2018-12-31 17:31:00").getTime();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
             datas.add(multipleDataBean);
         }
