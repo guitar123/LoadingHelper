@@ -1,9 +1,9 @@
 package zz.itcast.cn.loadinghelper.adapter;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import zz.itcast.cn.loading.recycleutils.WrapperUtils;
 import zz.itcast.cn.loadinghelper.DataManager;
 import zz.itcast.cn.loadinghelper.R;
 import zz.itcast.cn.loadinghelper.activity.BannerAdapter;

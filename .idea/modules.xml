@@ -2,9 +2,23 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LoadingHelper.iml" filepath="$PROJECT_DIR$/LoadingHelper.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/loading/loading.iml" filepath="$PROJECT_DIR$/loading/loading.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/LoadingHelper-master.iml" filepath="$PROJECT_DIR$/.idea/LoadingHelper-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/LoadingHelper-master.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/LoadingHelper-master.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/LoadingHelper-master.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/LoadingHelper-master.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/LoadingHelper-master.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/LoadingHelper-master.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/LoadingHelper-master.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/LoadingHelper-master.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/loading/LoadingHelper-master.loading.iml" filepath="$PROJECT_DIR$/.idea/modules/loading/LoadingHelper-master.loading.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/loading/LoadingHelper-master.loading.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/loading/LoadingHelper-master.loading.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/loading/LoadingHelper-master.loading.main.iml" filepath="$PROJECT_DIR$/.idea/modules/loading/LoadingHelper-master.loading.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/loading/LoadingHelper-master.loading.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/loading/LoadingHelper-master.loading.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/loading/android.project.LoadingHelper-master.loading.iml" filepath="$PROJECT_DIR$/.idea/modules/loading/android.project.LoadingHelper-master.loading.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/loading/android.project.LoadingHelper-master.loading.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/loading/android.project.LoadingHelper-master.loading.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/loading/android.project.LoadingHelper-master.loading.main.iml" filepath="$PROJECT_DIR$/.idea/modules/loading/android.project.LoadingHelper-master.loading.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/loading/android.project.LoadingHelper-master.loading.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/loading/android.project.LoadingHelper-master.loading.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/loading/project.LoadingHelper-master.loading.iml" filepath="$PROJECT_DIR$/.idea/modules/loading/project.LoadingHelper-master.loading.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/loading/project.LoadingHelper-master.loading.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/loading/project.LoadingHelper-master.loading.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/loading/project.LoadingHelper-master.loading.main.iml" filepath="$PROJECT_DIR$/.idea/modules/loading/project.LoadingHelper-master.loading.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/loading/project.LoadingHelper-master.loading.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/loading/project.LoadingHelper-master.loading.unitTest.iml" />
     </modules>
   </component>
 </project>

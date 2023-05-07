@@ -9,7 +9,7 @@ import zz.itcast.cn.loading.pullrefreshview.support.impl.OnScrollListener;
 import zz.itcast.cn.loading.pullrefreshview.support.impl.Pullable;
 
 
-public class PullableTextView extends android.support.v7.widget.AppCompatTextView implements Pullable {
+public class PullableTextView extends androidx.appcompat.widget.AppCompatTextView implements Pullable {
     private OnScrollListener onScrollListener = null;
 
     public PullableTextView(Context context) {

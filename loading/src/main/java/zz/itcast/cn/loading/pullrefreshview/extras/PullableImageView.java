@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import zz.itcast.cn.loading.pullrefreshview.support.impl.Pullable;
 
 
-public class PullableImageView extends android.support.v7.widget.AppCompatImageView implements Pullable {
+public class PullableImageView extends androidx.appcompat.widget.AppCompatImageView implements Pullable {
 
     public PullableImageView(Context context) {
         super(context);

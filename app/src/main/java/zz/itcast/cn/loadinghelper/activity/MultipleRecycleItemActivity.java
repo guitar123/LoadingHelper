@@ -5,17 +5,18 @@ import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import zz.itcast.cn.loading.recycleutils.HeaderAndFooterWrapper;
 import zz.itcast.cn.loadinghelper.DataManager;
 import zz.itcast.cn.loadinghelper.R;
 import zz.itcast.cn.loadinghelper.adapter.MultipleRecycleItemAdapter;
